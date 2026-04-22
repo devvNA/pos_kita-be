@@ -38,10 +38,19 @@ class StaffController extends Controller
     // get all staff for business
     public function getStaff($businessId)
     {
-        $staff = User::where('business_id', $businessId)->get();
-
-        //load role and outlet
-        $staff->load('role', 'outlet');
+        $staff = User::where('business_id', $businessId)
+            ->with(['role', 'outlet'])
+            ->get()
+            ->map(function ($user) {
+                // Owner has no outlet_id, resolve from business
+                if ($user->outlet === null && $user->business_id) {
+                    $user->setRelation(
+                        'outlet',
+                        \App\Models\Outlet::where('business_id', $user->business_id)->first()
+                    );
+                }
+                return $user;
+            });
 
         return response()->json([
             'data' => $staff,

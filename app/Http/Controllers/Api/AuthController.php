@@ -40,7 +40,7 @@ class AuthController extends Controller
 
         //create an outlet for the business
         $outlet = Outlet::create([
-            'name' => $request->name,
+            'name' => $request->business_name . ' - Pusat',
             'business_id' => $business->id,
             'address' => $request->address,
         ]);

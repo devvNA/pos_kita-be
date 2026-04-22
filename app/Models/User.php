@@ -21,7 +21,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'password', 
         'role_id',
         'outlet_id',
         'business_id',
@@ -54,6 +54,14 @@ class User extends Authenticatable
      * Get the business that owns the user.
      */
     public function business()
+    {
+        return $this->belongsTo(Business::class);
+    }
+
+    /**
+     * Get the business owned by this user (owner only).
+     */
+    public function ownedBusiness()
     {
         return $this->hasOne(Business::class, 'owner_id');
     }
